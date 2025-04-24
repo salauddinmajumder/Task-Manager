@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✔️ TaskMaster | Your Focus Hub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS Variables and Themes --- */
+        :root {
+            --font-main: 'Poppins', sans-serif;
+            /* Light Theme */
+            --bg-color-light: #f0f2f5;
+            --card-bg-light: #ffffff;
+            --text-color-light: #333;
+            --subtle-text-light: #777;
+            --accent-color-light: #007bff;
+            --accent-hover-light: #0056b3;
+            --success-color-light: #28a745;
+            --warning-color-light: #ffc107;
+            --danger-color-light: #dc3545;
+            --border-color-light: #e0e0e0;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            --neumorphic-shadow-light-outer: 5px 5px 10px #d9dcdf, -5px -5px 10px #ffffff;
+            --neumorphic-shadow-light-inner: inset 3px 3px 6px #d9dcdf, inset -3px -3px 6px #ffffff;
+            /* Dark Theme */
+            --bg-color-dark: #1a1a2e;
+            --card-bg-dark: #2a2a4e;
+            --text-color-dark: #e0e0e0;
+            --subtle-text-dark: #a0a0a0;
+            --accent-color-dark: #3a86ff;
+            --accent-hover-dark: #5e9fff;
+            --success-color-dark: #4caf50;
+            --warning-color-dark: #ffeb3b;
+            --danger-color-dark: #f44336;
+            --border-color-dark: #404060;
+            --shadow-dark: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --neumorphic-shadow-dark-outer: 5px 5px 10px #141424, -5px -5px 10px #202038;
+            --neumorphic-shadow-dark-inner: inset 3px 3px 6px #141424, inset -3px -3px 6px #202038;
+            /* Default to Light Theme */
+            --bg-color: var(--bg-color-light);
+            --card-bg: var(--card-bg-light);
+            --text-color: var(--text-color-light);
+            --subtle-text: var(--subtle-text-light);
+            --accent-color: var(--accent-color-light);
+            --accent-hover: var(--accent-hover-light);
+            --success-color: var(--success-color-light);
+            --warning-color: var(--warning-color-light);
+            --danger-color: var(--danger-color-light);
+            --border-color: var(--border-color-light);
+            --shadow: var(--shadow-light);
+            --neumorphic-outer: var(--neumorphic-shadow-light-outer);
+            --neumorphic-inner: var(--neumorphic-shadow-light-inner);
+
+            --priority-low: #28a745;
+            --priority-medium: #ffc107;
+            --priority-high: #dc3545;
+
+            --timer-pomodoro: #ff6b6b;
+            --timer-short-break: #4dabf7;
+            --timer-long-break: #4dd0e1;
+            --timer-custom: #fcc419;
+            --timer-stopwatch: #ced4da;
+        }
+
+        body.dark-mode {
+            --bg-color: var(--bg-color-dark);
+            --card-bg: var(--card-bg-dark);
+            --text-color: var(--text-color-dark);
+            --subtle-text: var(--subtle-text-dark);
+            --accent-color: var(--accent-color-dark);
+            --accent-hover: var(--accent-hover-dark);
+            --success-color: var(--success-color-dark);
+            --warning-color: var(--warning-color-dark);
+            --danger-color: var(--danger-color-dark);
+            --border-color: var(--border-color-dark);
+            --shadow: var(--shadow-dark);
+            --neumorphic-outer: var(--neumorphic-shadow-dark-outer);
+            --neumorphic-inner: var(--neumorphic-shadow-dark-inner);
+            --priority-low: #4caf50;
+            --priority-medium: #ffeb3b;
+            --priority-high: #f44336;
+        }
+
+        /* --- Global Styles & Reset --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 1rem;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            min-height: 100vh; /* Ensure body takes full height */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        h1, h2, h3 { margin-bottom: 0.8rem; font-weight: 600; }
+        h1 { font-size: 2.2rem; }
+        h2 { font-size: 1.8rem; }
+        h3 { font-size: 1.4rem; }
+        button, input, select {
+            font-family: inherit;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.2rem;
+            outline: none;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; /* Added color transition */
+        }
+        button {
+            cursor: pointer;
+            background-color: var(--accent-color);
+            color: white;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: var(--neumorphic-outer);
+        }
+        button:hover { background-color: var(--accent-hover); }
+        button:active { transform: scale(0.98); box-shadow: var(--neumorphic-inner); }
+        button:disabled { background-color: var(--subtle-text); cursor: not-allowed; box-shadow: none; transform: none; }
+        button.secondary { background-color: var(--card-bg); color: var(--accent-color); border: 1px solid var(--accent-color); box-shadow: none; }
+        button.secondary:hover { background-color: var(--accent-color); color: white; box-shadow: var(--neumorphic-outer); }
+        button.secondary:active { box-shadow: var(--neumorphic-inner); }
+        button.danger { background-color: var(--danger-color); }
+        button.danger:hover { background-color: #c82333; }
+        button.success { background-color: var(--success-color); }
+        button.success:hover { background-color: #218838; }
+        input[type="text"], input[type="number"], select {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            box-shadow: var(--neumorphic-inner);
+            padding: 0.7rem 1rem;
+        }
+
+        /* --- Utility Classes --- */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mr-1 { margin-right: 1rem; }
+        .ml-1 { margin-left: 1rem; }
+        .d-flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .align-center { align-items: center; }
+        .gap-1 { gap: 1rem; }
+        .flex-wrap { flex-wrap: wrap; }
+
+        /* --- Header --- */
+        .app-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .app-header h1 { margin-bottom: 0.5rem; animation: fadeInDown 0.8s ease-out; }
+        .quote-carousel {
+            font-style: italic;
+            font-size: 1.1rem;
+            min-height: 40px; /* Prevent layout shift */
+            position: relative; /* Needed for absolute positioning of quotes */
+        }
+        /* Quote Styling for JS control */
+        .quote {
+            position: absolute; /* Position all quotes on top of each other */
+            width: 100%;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out; /* Fade transition */
+            pointer-events: none; /* Prevent interaction when invisible */
+        }
+        .quote.active {
+            opacity: 1;
+            pointer-events: auto;
+            position: relative; /* Take up space when active */
+        }
+
+
+        /* --- Controls Bar --- */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 0.5rem; /* Space between items when wrapped */
+            margin-bottom: 1.5rem;
+            padding: 0.5rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        .controls-bar .username-display { font-weight: 600; margin-right: auto; /* Push buttons to the right */ }
+        .theme-toggle, .settings-btn {
+            background: none; border: none; font-size: 1.5rem; cursor: pointer;
+            color: var(--text-color); padding: 0.5rem; border-radius: 50%;
+            width: 40px; height: 40px; display: inline-flex; justify-content: center;
+            align-items: center; transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover, .settings-btn:hover { background-color: rgba(128, 128, 128, 0.1); transform: scale(1.1); }
+
+        /* --- Main Layout (Grid) --- */
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* --- Card Styles --- */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        /* Stagger card animation */
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card h2 { margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--accent-color); }
+
+        /* --- Timer Area --- */
+        .timer-modes {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow wrapping */
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .timer-modes button {
+            flex-grow: 1; flex-basis: auto; /* Allow natural sizing and wrapping */
+            font-size: 0.9rem; padding: 0.5rem 0.8rem; box-shadow: none;
+            border: 1px solid var(--border-color); background-color: var(--bg-color);
+            color: var(--subtle-text); min-width: 80px; /* Prevent excessive shrinking */
+        }
+        .timer-modes button.active { background-color: var(--accent-color); color: white; font-weight: 600; box-shadow: var(--neumorphic-outer); }
+        .timer-display-wrapper { display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem; position: relative; }
+        .timer-circle {
+            width: 200px; height: 200px; border-radius: 50%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; position: relative;
+            background-color: var(--bg-color); box-shadow: var(--neumorphic-inner);
+            transition: width 0.3s ease, height 0.3s ease; /* Smooth resize */
+        }
+        .timer-circle svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+        .timer-circle circle { fill: none; stroke-width: 10; }
+        .timer-circle .background-circle { stroke: var(--border-color); }
+        .timer-circle .progress-circle { stroke: var(--timer-pomodoro); stroke-linecap: round; transition: stroke-dashoffset 0.3s linear, stroke 0.3s ease; }
+        #timer-display { font-size: 3rem; font-weight: 600; color: var(--text-color); z-index: 1; transition: font-size 0.3s ease; }
+        #timer-mode-label { font-size: 0.9rem; color: var(--subtle-text); margin-top: -5px; z-index: 1; transition: font-size 0.3s ease;}
+        .custom-timer-input { margin-bottom: 1rem; }
+        .custom-timer-input label { display: block; margin-bottom: 0.3rem; font-size: 0.9rem; }
+        .timer-controls { display: flex; justify-content: center; gap: 1rem; }
+        .timer-controls button { padding: 0.8rem 1.5rem; font-size: 1.1rem; min-width: 100px; }
+        .timer-message { text-align: center; margin-top: 1rem; font-style: italic; color: var(--subtle-text); min-height: 20px; }
+
+        /* --- To-Do List Area --- */
+        .add-task-form { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; /* Allow wrapping */ }
+        .add-task-form input[type="text"] { flex: 1 1 200px; /* Grow, shrink, base width */ box-shadow: var(--neumorphic-inner); }
+        .add-task-form select { flex: 0 1 120px; /* Don't grow, shrink, base width */ box-shadow: var(--neumorphic-inner); }
+        .add-task-form button { flex: 0 0 auto; /* Don't grow or shrink */ padding: 0.7rem 1rem; }
+        .filter-buttons {
+             margin-bottom: 1rem; display: flex; flex-wrap: wrap; /* Allow wrapping */ gap: 0.5rem;
+        }
+        .filter-buttons button {
+            flex: 1 1 auto; /* Grow, shrink, auto base */ font-size: 0.9rem; padding: 0.5rem 0.8rem;
+            box-shadow: none; border: 1px solid var(--border-color); background-color: var(--bg-color);
+            color: var(--subtle-text); min-width: 70px; /* Prevent excessive shrinking */
+        }
+        .filter-buttons button.active { background-color: var(--accent-color); color: white; font-weight: 600; box-shadow: var(--neumorphic-outer); }
+        #task-list {
+            list-style: none; padding: 0; max-height: 400px; overflow-y: auto;
+            scrollbar-width: thin; scrollbar-color: var(--accent-color) var(--bg-color);
+            min-height: 50px; /* Provide some space even when empty or loading */
+        }
+        #task-list::-webkit-scrollbar { width: 8px; }
+        #task-list::-webkit-scrollbar-track { background: var(--bg-color); border-radius: 4px; }
+        #task-list::-webkit-scrollbar-thumb { background-color: var(--accent-color); border-radius: 4px; border: 2px solid var(--bg-color); }
+        .no-tasks-message { text-align: center; color: var(--subtle-text); padding: 1rem 0; }
+        .loading-message { text-align: center; color: var(--subtle-text); padding: 1rem 0; font-style: italic;}
+        .task-item {
+            display: flex; align-items: center; padding: 0.8rem 1rem; margin-bottom: 0.8rem;
+            background-color: var(--bg-color); border-radius: 8px; border-left: 5px solid var(--border-color);
+            transition: background-color 0.2s ease, border-left-color 0.2s ease, opacity 0.3s ease;
+            /* Use fade-in animation - less disruptive on list updates */
+            animation: fadeInUp 0.4s ease-out forwards;
+            opacity: 0; /* Start hidden for animation */
+            transform: translateY(10px); /* Start slightly lower */
+            position: relative;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.05), inset -2px -2px 4px rgba(255,255,255,0.6);
+        }
+        body.dark-mode .task-item { box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2), inset -2px -2px 4px rgba(255,255,255,0.1); }
+        .task-item.priority-low { border-left-color: var(--priority-low); }
+        .task-item.priority-medium { border-left-color: var(--priority-medium); }
+        .task-item.priority-high { border-left-color: var(--priority-high); }
+        .task-item.completed { opacity: 0.6; }
+        .task-item.completed .task-text { text-decoration: line-through; color: var(--subtle-text); }
+        .task-item input[type="checkbox"] { margin-right: 0.8rem; width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent-color); flex-shrink: 0; /* Prevent shrinking */}
+        .task-item .task-text { flex-grow: 1; margin-right: 0.5rem; word-break: break-word; }
+        .task-item .task-text.editing { display: none; }
+        .task-item .edit-input { display: none; flex-grow: 1; margin-right: 0.5rem; }
+        .task-item .edit-input.editing { display: block; }
+        .task-actions { display: flex; align-items: center; flex-shrink: 0; /* Prevent shrinking */ }
+        .task-actions button {
+            background: none; border: none; color: var(--subtle-text); font-size: 1rem;
+            padding: 0.3rem; margin-left: 0.3rem; cursor: pointer; box-shadow: none;
+        }
+        .task-actions button:hover { color: var(--accent-color); background: none; transform: scale(1.1); }
+        .task-actions .delete-btn:hover { color: var(--danger-color); }
+        .task-actions .save-btn:hover { color: var(--success-color); }
+        .task-item.pending.wiggle { animation: wiggle 0.5s ease-in-out; }
+        .task-item[draggable="true"] { cursor: move; }
+        .task-item.dragging { opacity: 0.5; border: 2px dashed var(--accent-color); background: rgba(0, 123, 255, 0.05); }
+        .drag-over { background-color: rgba(0, 123, 255, 0.1); border-top: 2px dashed var(--accent-color); }
+
+        /* --- Stats Area --- */
+        .stats-area .stat-item { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; font-size: 0.95rem; gap: 0.5rem; }
+        .stats-area .stat-label { color: var(--subtle-text); flex-shrink: 0; }
+        .stats-area .stat-value { font-weight: 600; text-align: right; }
+        .progress-bar-container { width: 100%; background-color: var(--border-color); border-radius: 5px; height: 15px; overflow: hidden; margin-top: 1rem; margin-bottom: 1rem; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-color), var(--success-color)); border-radius: 5px; transition: width 0.5s ease-out; text-align: center; color: white; font-size: 0.75rem; line-height: 15px; }
+        .pomodoro-batches { margin-top: 0.8rem; font-size: 1.5rem; text-align: center; min-height: 30px; word-break: break-all; }
+        .pomodoro-batches span { margin: 0 2px; display: inline-block; } /* Ensure spans don't break words */
+
+        /* --- Settings Panel (Modal Style) --- */
+        .settings-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; padding: 1rem; }
+        .settings-overlay.visible { opacity: 1; visibility: visible; }
+        .settings-panel { background-color: var(--card-bg); padding: 2rem; border-radius: 12px; box-shadow: var(--shadow-dark); width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; transform: scale(0.9); transition: transform 0.3s ease; }
+        .settings-overlay.visible .settings-panel { transform: scale(1); }
+        .settings-panel h2 { text-align: center; margin-bottom: 1.5rem; color: var(--accent-color); }
+        .settings-close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.8rem; color: var(--subtle-text); cursor: pointer; box-shadow: none; }
+        .settings-close-btn:hover { color: var(--danger-color); background: none; }
+        .settings-section { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+        .settings-section:last-child { border-bottom: none; padding-bottom: 0; }
+        .settings-section h3 { font-size: 1.2rem; margin-bottom: 0.8rem; }
+        .settings-section label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.95rem; }
+        .settings-section input[type="number"], .settings-section input[type="text"], .settings-section select { margin-bottom: 0.8rem; width: 100%; /* Make inputs full width */ }
+        .settings-section .sound-toggles { display: flex; flex-direction: column; gap: 0.8rem; /* Increased gap */ }
+        .settings-section .sound-toggles label { display: flex; align-items: center; justify-content: space-between; font-weight: normal; }
+        .settings-section .sound-toggles input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent-color); margin-left: 1rem; /* Space before toggle */ flex-shrink: 0; }
+
+        /* --- Modals (General Purpose) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1050; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; padding: 1rem; }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content { background-color: var(--card-bg); padding: 2rem; border-radius: 10px; box-shadow: var(--shadow-dark); text-align: center; max-width: 400px; width: 100%; transform: scale(0.9); transition: transform 0.3s ease; }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-content h3 { margin-bottom: 1rem; color: var(--accent-color); }
+        .modal-content p { margin-bottom: 1.5rem; }
+        .modal-content button { margin-top: 0.5rem; margin-left: 0.5rem; } /* Add some spacing */
+        .modal-content button:first-of-type { margin-left: 0; } /* No left margin for first button */
+
+
+        /* --- Confetti Animation --- */
+        .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2000; overflow: hidden; }
+        .confetti { position: absolute; width: 10px; height: 20px; background-color: #f00; opacity: 0; animation: confetti-fall 3s ease-out forwards; }
+        @keyframes confetti-fall { 0% { transform: translateY(-10vh) rotateZ(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotateZ(720deg); opacity: 0; } }
+
+        /* --- Animations --- */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } /* Adjusted transform */
+        @keyframes wiggle { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px) rotate(-2deg); } 75% { transform: translateX(5px) rotate(2deg); } }
+
+        /* --- Responsiveness --- */
+        @media (max-width: 768px) {
+             h1 { font-size: 1.8rem; }
+             h2 { font-size: 1.5rem; }
+             h3 { font-size: 1.2rem; }
+             .container { padding: 0 0.8rem; } /* Slightly more padding */
+             body { padding: 0.8rem; }
+             .main-content { grid-template-columns: 1fr; /* Stack cards */ }
+             .timer-circle { width: 180px; height: 180px; }
+             #timer-display { font-size: 2.5rem; }
+             #timer-mode-label { font-size: 0.85rem; }
+             .add-task-form { flex-direction: column; }
+             .add-task-form select { flex-basis: auto; width: 100%; /* Full width when stacked */ }
+             .settings-panel { padding: 1.5rem; }
+             .controls-bar { flex-direction: row; /* Keep row but allow wrap */}
+             .controls-bar .username-display { margin-bottom: 0; } /* Remove margin when wrapping */
+             .controls-bar > div:last-child { margin-left: auto; } /* Keep buttons right */
+        }
+
+        @media (max-width: 480px) {
+             body { padding: 0.5rem; }
+             .container { padding: 0 0.5rem; }
+             h1 { font-size: 1.6rem; }
+             h2 { font-size: 1.4rem; }
+             h3 { font-size: 1.1rem; }
+             .app-header { padding: 1rem; }
+             .quote-carousel { font-size: 1rem; min-height: 35px; }
+             .timer-circle { width: 150px; height: 150px; } /* Smaller timer */
+             #timer-display { font-size: 2rem; }
+             #timer-mode-label { font-size: 0.8rem; }
+             .timer-modes button, .filter-buttons button { font-size: 0.8rem; padding: 0.4rem 0.6rem; min-width: 60px; }
+             .timer-controls { gap: 0.5rem; }
+             .timer-controls button { padding: 0.6rem 1rem; font-size: 0.9rem; min-width: 80px;}
+             .task-item { padding: 0.6rem 0.8rem; }
+             .task-item input[type="checkbox"] { width: 18px; height: 18px; margin-right: 0.6rem; }
+             .task-actions button { font-size: 0.9rem; padding: 0.2rem; margin-left: 0.2rem;}
+             .modal-content, .settings-panel { padding: 1.2rem; }
+             .settings-panel h2 { font-size: 1.3rem; }
+             button, input, select { font-size: 0.95rem; padding: 0.5rem 1rem; } /* Slightly smaller controls */
+             .controls-bar .username-display { font-size: 0.9rem; }
+             .theme-toggle, .settings-btn { width: 35px; height: 35px; font-size: 1.3rem; }
+        }
+         @media (max-width: 360px) {
+              .timer-circle { width: 130px; height: 130px; }
+              #timer-display { font-size: 1.8rem; }
+              .pomodoro-batches { font-size: 1.2rem; }
+         }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="app-header">
+            <h1>SurSoi Task Manager</h1>
+             <div class="quote-carousel" id="quote-carousel">
+                <!-- Quotes will be loaded by JS -->
+                <p class="quote">"The secret of getting ahead is getting started." - Mark Twain</p>
+                <p class="quote">"Focus on being productive instead of busy." - Tim Ferriss</p>
+                <p class="quote">"The key is not to prioritize what's on your schedule, but to schedule your priorities." - Stephen Covey</p>
+                 <p class="quote">"Well done is better than well said." - Benjamin Franklin</p>
+                 <p class="quote">"Believe you can and you're halfway there." - Theodore Roosevelt</p>
+            </div>
+        </header>
+
+        <!-- Controls Bar -->
+        <div class="controls-bar">
+            <span class="username-display">Hi User! Ready to conquer today?</span>
+            <div>
+                <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle Theme">☀️</button>
+                <button class="settings-btn" id="settings-btn" aria-label="Open Settings">⚙️</button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+
+            <!-- Timer Section -->
+            <section class="card timer-section">
+                <h2>Focus Timer</h2>
+                <div class="timer-modes">
+                    <button data-mode="pomodoro" class="active">Pomodoro (25m)</button>
+                    <button data-mode="shortBreak">Short Break (5m)</button>
+                    <button data-mode="longBreak">Long Break (15m)</button>
+                    <button data-mode="stopwatch">Stopwatch</button>
+                    <button data-mode="custom">Custom</button>
+                </div>
+
+                <div class="timer-display-wrapper">
+                     <div class="timer-circle">
+                         <svg viewBox="0 0 100 100">
+                            <circle class="background-circle" cx="50" cy="50" r="45"></circle>
+                            <circle class="progress-circle" cx="50" cy="50" r="45" pathLength="100"></circle>
+                        </svg>
+                        <div id="timer-display">25:00</div>
+                        <div id="timer-mode-label">Pomodoro</div>
+                     </div>
+                </div>
+                 <div class="custom-timer-input hidden" id="custom-timer-input-area">
+                     <label for="custom-minutes">Set time (minutes):</label>
+                     <input type="number" id="custom-minutes" min="1" value="10">
+                 </div>
+                 <div class="timer-controls">
+                    <button id="start-pause-btn">Start</button>
+                    <button id="reset-btn">Reset</button>
+                 </div>
+                <p class="timer-message" id="timer-message">Ready to focus?</p>
+            </section>
+
+            <!-- To-Do List Section -->
+            <section class="card todo-section">
+                <h2>My Tasks</h2>
+                <form id="add-task-form" class="add-task-form">
+                    <input type="text" id="new-task-input" placeholder="Add a new task..." required>
+                    <select id="new-task-priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <button type="submit">Add Task</button>
+                </form>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                </div>
+                <ul id="task-list">
+                    <!-- Tasks will be loaded here by JS from API -->
+                    <li class="loading-message">Loading tasks...</li>
+                </ul>
+                 <p class="no-tasks-message hidden" id="no-tasks-message">No tasks yet. Add one above!</p>
+            </section>
+
+            <!-- Stats and Progress Section -->
+            <section class="card stats-section">
+                <h2>Progress & Stats</h2>
+                <div class="stats-area">
+                    <div class="stat-item">
+                        <span class="stat-label">Tasks Completed Today:</span>
+                        <span class="stat-value" id="tasks-completed-today">0</span>
+                    </div>
+                     <div class="stat-item">
+                         <span class="stat-label">Task Progress:</span>
+                         <span class="stat-value" id="task-progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="task-progress-bar"></div>
+                    </div>
+                     <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1rem 0;">
+                    <div class="stat-item">
+                        <span class="stat-label">Pomodoros Today:</span>
+                        <span class="stat-value" id="pomodoros-today">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Focus Time Today:</span>
+                        <span class="stat-value" id="total-focus-time">0m</span>
+                    </div>
+                     <div class="pomodoro-batches" id="pomodoro-batches">
+                         <!-- Batch icons like 🔴🔴🔴🟢 will appear here -->
+                     </div>
+                      <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1rem 0;">
+                    <div class="stat-item">
+                        <span class="stat-label">Daily Streak:</span>
+                        <span class="stat-value" id="daily-streak">🔥 0 days</span>
+                    </div>
+                     <div class="stat-item">
+                        <span class="stat-label">Weekly Streak:</span>
+                        <span class="stat-value" id="weekly-streak">🏆 0 weeks</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div> <!-- End Container -->
+
+    <!-- Settings Panel (Modal) -->
+    <div class="settings-overlay" id="settings-overlay">
+        <div class="settings-panel">
+            <button class="settings-close-btn" id="settings-close-btn" aria-label="Close Settings">&times;</button>
+            <h2>Settings</h2>
+
+            <div class="settings-section">
+                <h3>General</h3>
+                 <label for="username-input">Your Name:</label>
+                 <input type="text" id="username-input" placeholder="Enter your name">
+                 <small>Changing name affects which tasks are loaded. Reload might be needed.</small>
+            </div>
+
+            <div class="settings-section">
+                <h3>Timer Durations (minutes)</h3>
+                <label for="pomodoro-duration">Pomodoro:</label>
+                <input type="number" id="pomodoro-duration" min="1" max="90">
+                <label for="short-break-duration">Short Break:</label>
+                <input type="number" id="short-break-duration" min="1" max="30">
+                <label for="long-break-duration">Long Break:</label>
+                <input type="number" id="long-break-duration" min="1" max="60">
+            </div>
+
+            <div class="settings-section">
+                <h3>Sounds</h3>
+                <div class="sound-toggles">
+                    <label>
+                        <span>UI Click Sounds</span>
+                        <input type="checkbox" id="toggle-ui-sounds">
+                    </label>
+                    <label>
+                        <span>Timer Alerts</span>
+                        <input type="checkbox" id="toggle-timer-alerts">
+                    </label>
+                 </div>
+                 <label for="background-sound-select" class="mt-1">Background Ambience:</label>
+                 <select id="background-sound-select">
+                     <option value="none">None</option>
+                     <option value="focus">Focus Music</option>
+                     <option value="rain">Rain</option>
+                     <option value="cafe">Cafe</option>
+                 </select>
+            </div>
+
+            <div class="settings-section">
+                <h3>Data</h3>
+                <button id="save-settings-btn" class="success">Save Settings</button>
+                <button id="reset-data-btn" class="danger mt-1">Reset Data</button>
+                <p class="mt-1"><small>Resetting clears tasks for current user from server & all local data (settings/stats).</small></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Purpose Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title">Modal Title</h3>
+            <p id="modal-message">Modal message goes here.</p>
+            <div> <!-- Wrap buttons for better spacing control if needed -->
+                 <button id="modal-confirm-btn" class="secondary hidden">Confirm</button>
+                 <button id="modal-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+     <!-- Daily Summary Modal -->
+    <div class="modal-overlay" id="daily-summary-overlay">
+        <div class="modal-content">
+            <h3>Daily Summary</h3>
+            <p>Here's how you did yesterday:</p>
+            <ul style="text-align: left; list-style: inside; margin-bottom: 1rem;">
+                <li id="summary-completed">Completed: 0 tasks</li>
+                <li id="summary-missed">Missed: 0 tasks</li>
+                <li id="summary-streak">Streak: Maintained / Broken</li>
+            </ul>
+            <button id="daily-summary-close-btn">Got it!</button>
+        </div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confetti-container"></div>
+
+    <!-- Audio Elements -->
+    <audio id="audio-task-complete" src="https://cdn.jsdelivr.net/gh/koolkishan/audiomass/audios/positive.mp3" preload="auto"></audio>
+    <audio id="audio-timer-end" src="https://cdn.jsdelivr.net/gh/koolkishan/audiomass/audios/notification-alert-bells.mp3" preload="auto"></audio>
+    <audio id="audio-button-click" src="https://cdn.jsdelivr.net/gh/koolkishan/audiomass/audios/button-press.mp3" preload="auto"></audio>
+    <audio id="audio-bg-focus" src="https://cdn.jsdelivr.net/gh/koolkishan/audiomass/audios/ambient-piano-loop.mp3" loop preload="metadata"></audio>
+    <audio id="audio-bg-rain" src="https://cdn.jsdelivr.net/gh/koolkishan/audiomass/audios/light-rain.mp3" loop preload="metadata"></audio>
+    <audio id="audio-bg-cafe" src="https://cdn.jsdelivr.net/gh/koolkishan/audiomass/audios/coffeeshop-ambience.mp3" loop preload="metadata"></audio>
+
+
+    <!-- JavaScript (Internal Script) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- API Endpoint ---
+            const API_ENDPOINT = 'api.php'; // Define the PHP script URL
+
+            // --- DOM Element Selectors (Cached) ---
+            const body = document.body;
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const settingsBtn = document.getElementById('settings-btn');
+            const settingsOverlay = document.getElementById('settings-overlay');
+            const settingsPanel = document.querySelector('.settings-panel');
+            const settingsCloseBtn = document.getElementById('settings-close-btn');
+            const saveSettingsBtn = document.getElementById('save-settings-btn');
+            const resetDataBtn = document.getElementById('reset-data-btn');
+            const usernameDisplay = document.querySelector('.username-display');
+            const usernameInput = document.getElementById('username-input');
+
+            const pomodoroDurationInput = document.getElementById('pomodoro-duration');
+            const shortBreakDurationInput = document.getElementById('short-break-duration');
+            const longBreakDurationInput = document.getElementById('long-break-duration');
+
+            const toggleUiSounds = document.getElementById('toggle-ui-sounds');
+            const toggleTimerAlerts = document.getElementById('toggle-timer-alerts');
+            const backgroundSoundSelect = document.getElementById('background-sound-select');
+
+            const newTaskInput = document.getElementById('new-task-input');
+            const newTaskPriority = document.getElementById('new-task-priority');
+            const addTaskForm = document.getElementById('add-task-form');
+            const taskList = document.getElementById('task-list');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const noTasksMessage = document.getElementById('no-tasks-message');
+
+            const timerModesBtns = document.querySelectorAll('.timer-modes button');
+            const timerDisplay = document.getElementById('timer-display');
+            const timerModeLabel = document.getElementById('timer-mode-label');
+            const progressCircle = document.querySelector('.progress-circle');
+            const startPauseBtn = document.getElementById('start-pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const timerMessage = document.getElementById('timer-message');
+            const customTimerInputArea = document.getElementById('custom-timer-input-area');
+            const customMinutesInput = document.getElementById('custom-minutes');
+
+            const tasksCompletedTodayDisplay = document.getElementById('tasks-completed-today');
+            const taskProgressBar = document.getElementById('task-progress-bar');
+            const taskProgressPercentDisplay = document.getElementById('task-progress-percent');
+            const pomodorosTodayDisplay = document.getElementById('pomodoros-today');
+            const totalFocusTimeDisplay = document.getElementById('total-focus-time');
+            const pomodoroBatchesDisplay = document.getElementById('pomodoro-batches');
+            const dailyStreakDisplay = document.getElementById('daily-streak');
+            const weeklyStreakDisplay = document.getElementById('weekly-streak');
+
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+
+            const dailySummaryOverlay = document.getElementById('daily-summary-overlay');
+            const dailySummaryCloseBtn = document.getElementById('daily-summary-close-btn');
+            const summaryCompleted = document.getElementById('summary-completed');
+            const summaryMissed = document.getElementById('summary-missed');
+            const summaryStreak = document.getElementById('summary-streak');
+
+            const confettiContainer = document.getElementById('confetti-container');
+            const quoteCarousel = document.getElementById('quote-carousel');
+            const quoteElements = quoteCarousel.querySelectorAll('.quote');
+
+            const audioTaskComplete = document.getElementById('audio-task-complete');
+            const audioTimerEnd = document.getElementById('audio-timer-end');
+            const audioButtonClick = document.getElementById('audio-button-click');
+            const audioBgFocus = document.getElementById('audio-bg-focus');
+            const audioBgRain = document.getElementById('audio-bg-rain');
+            const audioBgCafe = document.getElementById('audio-bg-cafe');
+            const backgroundAudios = {
+                focus: audioBgFocus,
+                rain: audioBgRain,
+                cafe: audioBgCafe,
+            };
+            let currentBgAudio = null;
+
+            // --- State Variables ---
+            let tasks = [];
+            let settings = {}; // Loaded in init
+            let stats = {}; // Loaded in init
+            let currentUserId = null; // Will be set after fetching/creating user
+            let currentFilter = 'all';
+            let timerInterval = null;
+            let timerState = {
+                mode: 'pomodoro', running: false, timeLeft: 0, totalTime: 0, stopwatchTime: 0,
+            };
+            let pomodoroCycleCount = 0; // Tracks pomodoros today
+            let draggedItem = null;
+            let quoteInterval = null; // Interval timer for quote rotation
+            let currentQuoteIndex = 0;
+
+             // --- Default Settings --- (Used if nothing in localStorage)
+             const defaultSettings = {
+                 theme: 'light',
+                 username: 'User', // Default username
+                 pomodoroDuration: 25,
+                 shortBreakDuration: 5,
+                 longBreakDuration: 15,
+                 soundUI: true,
+                 soundAlerts: true,
+                 soundBackground: 'none',
+             };
+
+             // --- Default Stats --- (Used if nothing in localStorage)
+             const defaultStats = {
+                 lastVisitDate: null,
+                 tasksCompletedToday: 0,
+                 pomodorosToday: 0,
+                 totalFocusTimeToday: 0, // in minutes
+                 dailyStreak: 0,
+                 lastCompletedDate: null, // For daily streak
+                 weeklyStreak: 0,
+                 lastCompletedWeek: null, // For weekly streak (e.g., YYYY-WW)
+                 pomodoroHistory: [], // Array of 'P', 'S', 'L' for batches today
+                 dailySummary: null // Store summary if needed across refresh
+             };
+
+            // --- Motivational Quotes & Messages ---
+             const motivationalQuotes = quoteElements.length > 0 ? Array.from(quoteElements).map(q => q.textContent) : [
+                "The secret of getting ahead is getting started. - Mark Twain",
+                "Focus on being productive instead of busy. - Tim Ferriss",
+                "The key is not to prioritize what's on your schedule, but to schedule your priorities. - Stephen Covey",
+                "Well done is better than well said. - Benjamin Franklin",
+                "Believe you can and you're halfway there. - Theodore Roosevelt",
+             ]; // Fallback if querySelector fails
+             const timerFocusMessages = ["Stay focused, you got this!", "Deep work in progress...", "One step at a time.", "Keep pushing!", "Zone in!", "Concentrate and conquer.", "Making progress!"];
+             const timerBreakMessages = ["Time for a breather.", "Stretch and relax.", "Step away and recharge.", "Nice work, enjoy the break!", "Rest your eyes.", "Hydrate and refresh."];
+             const completionMessages = ["Awesome!", "Great job!", "You did it!", "Fantastic!", "Well done!", "Keep it up!", "Amazing!", "Superstar!"];
+
+            // --- LocalStorage Manager (Settings/Stats ONLY) ---
+            const storageManager = {
+                // saveTasks: () => {...}, // REMOVED
+                // loadTasks: () => {...}, // REMOVED
+                saveSettings: () => {
+                    try { localStorage.setItem('taskmaster_settings', JSON.stringify(settings)); }
+                    catch(e) { console.error("Error saving settings to localStorage:", e); }
+                },
+                loadSettings: () => {
+                    try {
+                        const stored = localStorage.getItem('taskmaster_settings');
+                        return stored ? { ...defaultSettings, ...JSON.parse(stored) } : { ...defaultSettings };
+                    } catch(e) {
+                        console.error("Error loading settings from localStorage:", e);
+                        return { ...defaultSettings }; // Return defaults on error
+                    }
+                },
+                saveStats: () => {
+                     try { localStorage.setItem('taskmaster_stats', JSON.stringify(stats)); }
+                     catch(e) { console.error("Error saving stats to localStorage:", e); }
+                },
+                loadStats: () => {
+                    try {
+                        const stored = localStorage.getItem('taskmaster_stats');
+                        return stored ? { ...defaultStats, ...JSON.parse(stored) } : { ...defaultStats };
+                    } catch(e) {
+                        console.error("Error loading stats from localStorage:", e);
+                        return { ...defaultStats }; // Return defaults on error
+                    }
+                },
+                clearAll: () => {
+                    // Keep settings/stats clear, tasks are cleared in DB on reset action (via re-init)
+                    try {
+                        localStorage.removeItem('taskmaster_settings');
+                        localStorage.removeItem('taskmaster_stats');
+                    } catch (e) { console.error("Error clearing localStorage:", e); }
+                    // localStorage.removeItem('taskmaster_tasks'); // REMOVED
+                }
+            };
+
+            // --- Sound Manager ---
+            const soundManager = {
+                play: (audioElement) => {
+                    if (!audioElement || audioElement.readyState < 2) { // Check readyState
+                         // console.warn("Audio element not ready or does not exist:", audioElement);
+                        return;
+                    }
+                    try {
+                        audioElement.currentTime = 0;
+                        audioElement.play().catch(e => console.warn("Audio play interrupted or failed:", e));
+                    } catch (error) { console.warn("Could not play audio:", error); }
+                },
+                playTaskComplete: () => { if (settings.soundUI) soundManager.play(audioTaskComplete); },
+                playTimerEnd: () => { if (settings.soundAlerts) soundManager.play(audioTimerEnd); },
+                playButtonClick: () => { if (settings.soundUI) soundManager.play(audioButtonClick); },
+                playBackground: (soundKey) => {
+                    soundManager.stopBackground();
+                    if (soundKey !== 'none' && backgroundAudios[soundKey]) {
+                        currentBgAudio = backgroundAudios[soundKey];
+                        currentBgAudio.volume = 0.3;
+                        soundManager.play(currentBgAudio);
+                    } else { currentBgAudio = null; }
+                    // Save setting immediately when changed via UI (or called internally)
+                    if (settings.soundBackground !== soundKey) {
+                       settings.soundBackground = soundKey;
+                       storageManager.saveSettings();
+                    }
+                },
+                stopBackground: () => { if (currentBgAudio) { currentBgAudio.pause(); currentBgAudio.currentTime = 0; currentBgAudio = null; } },
+                updateMuteStates: () => {
+                    if (audioTaskComplete) audioTaskComplete.muted = !settings.soundUI;
+                    if (audioButtonClick) audioButtonClick.muted = !settings.soundUI;
+                    if (audioTimerEnd) audioTimerEnd.muted = !settings.soundAlerts;
+                    // Background audio volume/play is handled by playBackground/stopBackground
+                },
+                setBackgroundSoundFromSettings: () => {
+                    if (backgroundSoundSelect) backgroundSoundSelect.value = settings.soundBackground;
+                    soundManager.playBackground(settings.soundBackground); // Start playing if not 'none' and not already playing
+                }
+            };
+
+            // --- UI Manager ---
+            const uiManager = {
+                applyTheme: (theme) => {
+                    body.classList.toggle('dark-mode', theme === 'dark');
+                    if (themeToggleBtn) themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+                },
+                updateUsernameDisplay: () => {
+                    if (usernameDisplay) usernameDisplay.textContent = `Hi ${settings.username}! Ready to conquer today?`;
+                },
+                 startQuoteCarousel: () => {
+                     if (quoteInterval) clearInterval(quoteInterval); // Clear existing interval if any
+                     if (quoteElements.length === 0) return; // No quotes found
+
+                     const showQuote = (index) => {
+                         quoteElements.forEach((quote, i) => {
+                             quote.classList.toggle('active', i === index);
+                         });
+                     };
+
+                     showQuote(currentQuoteIndex); // Show initial quote
+
+                     quoteInterval = setInterval(() => {
+                         currentQuoteIndex = (currentQuoteIndex + 1) % quoteElements.length;
+                         showQuote(currentQuoteIndex);
+                     }, 8000); // Change quote every 8 seconds
+                 },
+                renderTasks: () => {
+                    if (!taskList) return;
+                    taskList.innerHTML = ''; // Clear list
+
+                    // Filter tasks based on the current view
+                    const filteredTasks = tasks.filter(task => {
+                        if (currentFilter === 'all') return true;
+                        if (currentFilter === 'completed') return task.completed;
+                        if (currentFilter === 'pending') return !task.completed;
+                        return true; // Should not happen
+                    });
+
+                    if (tasks.length === 0) {
+                        if (noTasksMessage) noTasksMessage.classList.remove('hidden');
+                    } else {
+                        if (noTasksMessage) noTasksMessage.classList.add('hidden');
+                         // Show message if filtering results in empty list, but tasks exist
+                        if (filteredTasks.length === 0 && currentFilter !== 'all') {
+                             const li = document.createElement('li');
+                             li.className = 'loading-message'; // Use similar styling
+                             li.textContent = `No ${currentFilter} tasks found.`;
+                             taskList.appendChild(li);
+                         }
+                    }
+
+                    // Sort tasks based on sort_order before rendering filtered list
+                    // (Important for drag-and-drop consistency)
+                    const sortedFilteredTasks = filteredTasks.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+
+                    sortedFilteredTasks.forEach(task => {
+                        const li = document.createElement('li');
+                        li.className = `task-item ${task.completed ? 'completed' : 'pending'} priority-${task.priority}`;
+                        li.dataset.id = task.id; // Use ID from DB
+                        li.draggable = true;
+
+                        // Sanitize task text before inserting into HTML to prevent XSS
+                        const sanitizedText = document.createElement('span');
+                        sanitizedText.textContent = task.text;
+
+                        li.innerHTML = `
+                            <input type="checkbox" ${task.completed ? 'checked' : ''} aria-label="Mark task as ${task.completed ? 'pending' : 'complete'}">
+                            <span class="task-text">${sanitizedText.innerHTML}</span>
+                            <input type="text" class="edit-input" value="${sanitizedText.innerHTML}" style="display: none;" aria-label="Edit task text">
+                             <div class="task-actions">
+                                <button class="edit-btn" aria-label="Edit task">✏️</button>
+                                <button class="delete-btn" aria-label="Delete task">🗑️</button>
+                                 <button class="save-btn" style="display: none;" aria-label="Save changes">💾</button>
+                             </div>
+                        `;
+                        taskList.appendChild(li);
+                    });
+                     uiManager.updateStats(); // Update stats based on the full task list
+                },
+                updateFilterButtons: () => {
+                    filterBtns.forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.filter === currentFilter);
+                    });
+                },
+                updateTimerDisplay: () => {
+                     if (!timerDisplay || !progressCircle || !timerModeLabel) return;
+                    let minutes, seconds, displayString, progressPercent = 0;
+
+                    if (timerState.mode === 'stopwatch') {
+                        minutes = Math.floor(timerState.stopwatchTime / 60);
+                        seconds = timerState.stopwatchTime % 60;
+                        displayString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                        progressPercent = 100; // Keep circle full for stopwatch
+                        timerModeLabel.textContent = "Stopwatch";
+                        uiManager.setCircleColor('stopwatch');
+                    } else {
+                        minutes = Math.floor(timerState.timeLeft / 60);
+                        seconds = timerState.timeLeft % 60;
+                        displayString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                        progressPercent = timerState.totalTime > 0 ? ((timerState.totalTime - timerState.timeLeft) / timerState.totalTime) * 100 : 0;
+
+                        let durationLabel = '';
+                        switch (timerState.mode) {
+                             case 'pomodoro': durationLabel = `Pomodoro (${settings.pomodoroDuration}m)`; break;
+                             case 'shortBreak': durationLabel = `Short Break (${settings.shortBreakDuration}m)`; break;
+                             case 'longBreak': durationLabel = `Long Break (${settings.longBreakDuration}m)`; break;
+                             case 'custom': durationLabel = `Custom (${customMinutesInput ? customMinutesInput.value : '?'}m)`; break;
+                             default: durationLabel = 'Timer';
+                         }
+                        timerModeLabel.textContent = durationLabel;
+                        uiManager.setCircleColor(timerState.mode);
+                    }
+
+                    timerDisplay.textContent = displayString;
+                    progressCircle.style.strokeDasharray = 100;
+                    progressCircle.style.strokeDashoffset = 100 - progressPercent;
+
+                    if (timerState.running) {
+                        document.title = `${displayString} - ${timerModeLabel.textContent} | TaskMaster`;
+                    } else {
+                        document.title = '✔️ TaskMaster | Your Focus Hub';
+                    }
+                },
+                 setCircleColor: (mode) => {
+                    if (!progressCircle) return;
+                    let colorVar;
+                    switch (mode) {
+                        case 'pomodoro': colorVar = 'var(--timer-pomodoro)'; break;
+                        case 'shortBreak': colorVar = 'var(--timer-short-break)'; break;
+                        case 'longBreak': colorVar = 'var(--timer-long-break)'; break;
+                        case 'custom': colorVar = 'var(--timer-custom)'; break;
+                        case 'stopwatch': colorVar = 'var(--timer-stopwatch)'; break;
+                        default: colorVar = 'var(--accent-color)';
+                    }
+                    progressCircle.style.stroke = colorVar;
+                 },
+                 updateTimerButtons: () => {
+                    if (!startPauseBtn || !resetBtn) return;
+                    startPauseBtn.textContent = timerState.running ? 'Pause' : 'Start';
+                     const isAtInitialState = (timerState.mode !== 'stopwatch' && timerState.timeLeft === timerState.totalTime) || (timerState.mode === 'stopwatch' && timerState.stopwatchTime === 0);
+                     resetBtn.disabled = !timerState.running && isAtInitialState;
+                },
+                 updateTimerMessage: (message = "") => {
+                     if (timerMessage) timerMessage.textContent = message;
+                 },
+                updateStats: () => {
+                    // Use the full 'tasks' array for accurate progress calculation
+                    const completedTasks = tasks.filter(t => t.completed);
+                    const totalTasks = tasks.length;
+                    const completionPercentage = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
+
+                    // Use 'stats' object for daily/streak counters
+                    if (tasksCompletedTodayDisplay) tasksCompletedTodayDisplay.textContent = stats.tasksCompletedToday;
+                    if (taskProgressBar) {
+                         taskProgressBar.style.width = `${completionPercentage}%`;
+                         taskProgressBar.textContent = totalTasks > 0 ? `${completionPercentage}%` : '';
+                    }
+                    if (taskProgressPercentDisplay) taskProgressPercentDisplay.textContent = `${completionPercentage}%`;
+                    if (pomodorosTodayDisplay) pomodorosTodayDisplay.textContent = stats.pomodorosToday;
+                    if (totalFocusTimeDisplay) totalFocusTimeDisplay.textContent = `${stats.totalFocusTimeToday}m`;
+                    if (dailyStreakDisplay) dailyStreakDisplay.textContent = `🔥 ${stats.dailyStreak} day${stats.dailyStreak !== 1 ? 's' : ''}`;
+                    if (weeklyStreakDisplay) weeklyStreakDisplay.textContent = `🏆 ${stats.weeklyStreak} week${stats.weeklyStreak !== 1 ? 's' : ''}`;
+                    uiManager.renderPomodoroBatches();
+                },
+                 renderPomodoroBatches: () => {
+                     if (!pomodoroBatchesDisplay) return;
+                     pomodoroBatchesDisplay.innerHTML = stats.pomodoroHistory.map(type => {
+                         switch(type) {
+                             case 'P': return '🔴'; case 'S': return '🟢'; case 'L': return '🔵'; default: return '';
+                         }
+                     }).join('<span> </span>');
+                 },
+                showModal: (title, message, showConfirm = false, confirmCallback = null, confirmText = 'Confirm', closeText = 'Close') => {
+                    if (!modalOverlay || !modalTitle || !modalMessage || !modalConfirmBtn || !modalCloseBtn) return;
+                    modalTitle.textContent = title;
+                    modalMessage.innerHTML = message; // Use innerHTML cautiously, ensure message content is safe
+                    modalConfirmBtn.textContent = confirmText;
+                    modalCloseBtn.textContent = closeText;
+                    modalConfirmBtn.classList.toggle('hidden', !showConfirm);
+
+                    // Remove previous handlers before adding new ones
+                    modalConfirmBtn.onclick = null;
+                    modalCloseBtn.onclick = null;
+
+                    // Assign new click handlers
+                    if (showConfirm) {
+                        modalConfirmBtn.onclick = () => {
+                            soundManager.playButtonClick();
+                            if (confirmCallback) confirmCallback();
+                            uiManager.hideModal();
+                        };
+                    }
+                    modalCloseBtn.onclick = () => {
+                        soundManager.playButtonClick();
+                        uiManager.hideModal();
+                    };
+
+                    modalOverlay.classList.add('visible');
+                    modalCloseBtn.focus(); // Focus close button by default
+                 },
+                hideModal: () => {
+                     if (modalOverlay) modalOverlay.classList.remove('visible');
+                     // No need to remove handlers here if they are set correctly in showModal
+                 },
+                showSettings: () => {
+                    if (!settingsOverlay || !usernameInput || !pomodoroDurationInput || !shortBreakDurationInput || !longBreakDurationInput || !toggleUiSounds || !toggleTimerAlerts || !backgroundSoundSelect) return;
+                    usernameInput.value = settings.username;
+                    pomodoroDurationInput.value = settings.pomodoroDuration;
+                    shortBreakDurationInput.value = settings.shortBreakDuration;
+                    longBreakDurationInput.value = settings.longBreakDuration;
+                    toggleUiSounds.checked = settings.soundUI;
+                    toggleTimerAlerts.checked = settings.soundAlerts;
+                    backgroundSoundSelect.value = settings.soundBackground;
+                    settingsOverlay.classList.add('visible');
+                     if(settingsCloseBtn) settingsCloseBtn.focus();
+                 },
+                 hideSettings: () => { if (settingsOverlay) settingsOverlay.classList.remove('visible'); },
+                 triggerConfetti: () => {
+                     if (!confettiContainer) return;
+                     confettiContainer.innerHTML = '';
+                     const colors = ['#ff6b6b', '#f06595', '#cc5de8', '#845ef7', '#5c7cfa', '#339af0', '#22b8cf', '#20c997', '#51cf66', '#94d82d', '#fcc419', '#ff922b'];
+                     for (let i = 0; i < 80; i++) {
+                         const confetti = document.createElement('div');
+                         confetti.classList.add('confetti');
+                         confetti.style.left = `${Math.random() * 100}vw`;
+                         confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                         confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                         confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                         confetti.style.height = `${Math.random() * 15 + 5}px`;
+                         confetti.style.width = `${Math.random() * 8 + 4}px`;
+                         confettiContainer.appendChild(confetti);
+                     }
+                     // Clear confetti after animation ends
+                     setTimeout(() => { if (confettiContainer) confettiContainer.innerHTML = ''; }, 3500);
+                 },
+                 showDailySummary: (summaryData) => {
+                     if (!summaryData || !dailySummaryOverlay || !summaryCompleted || !summaryMissed || !summaryStreak) return;
+                     summaryCompleted.textContent = `Completed: ${summaryData.completed} tasks`;
+                     summaryMissed.textContent = `Missed: ${summaryData.missed} tasks`; // Missed calculation might need refinement based on definition
+                     summaryStreak.textContent = `Streak: ${summaryData.streakMaintained ? 'Maintained! 🔥' : 'Broken 😔'}`;
+                     dailySummaryOverlay.classList.add('visible');
+                     if (dailySummaryCloseBtn) dailySummaryCloseBtn.focus();
+                 },
+                 hideDailySummary: () => { if (dailySummaryOverlay) dailySummaryOverlay.classList.remove('visible'); },
+                 showPositiveReinforcement: () => {
+                    const completedCount = stats.tasksCompletedToday;
+                    if (completedCount > 0 && completedCount % 3 === 0) {
+                        const message = `You've completed ${completedCount} tasks today! ${completionMessages[Math.floor(Math.random() * completionMessages.length)]} 🎉`;
+                        uiManager.showModal("Keep Going!", message);
+                        uiManager.triggerConfetti();
+                    }
+                 },
+                 getRandomQuote: () => motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
+                 showRandomQuoteModal: () => {
+                     uiManager.showModal("Motivation Boost!", uiManager.getRandomQuote(), false, null, '', 'Got it!');
+                 }
+            };
+
+            // --- Task Manager (Modified for API) ---
+            const taskManager = {
+                addTask: async (text, priority) => {
+                    if (!text.trim() || !newTaskInput || !currentUserId) {
+                         if (!currentUserId) uiManager.showModal("Error", "Cannot add task: User not identified. Try reloading.");
+                         return;
+                    }
+
+                    soundManager.playButtonClick();
+                    const tempId = `temp-${Date.now()}`; // Optimistic UI temp ID
+                    // Estimate the next sort order for optimistic UI
+                    const nextSortOrder = tasks.length > 0 ? Math.max(...tasks.map(t => t.sort_order ?? -1)) + 1 : 0;
+                    const newTaskOptimistic = {
+                        id: tempId,
+                        text: text.trim(),
+                        priority: priority,
+                        completed: false,
+                        createdAt: new Date().toISOString(), // Placeholder
+                        sort_order: nextSortOrder
+                    };
+
+                    // Optimistic UI update: Add to beginning of array, then render (which sorts)
+                    tasks.unshift(newTaskOptimistic);
+                    uiManager.renderTasks(); // Render immediately with temp item (will be sorted)
+                    newTaskInput.value = '';
+                    newTaskPriority.value = 'medium';
+
+                    try {
+                        const formData = new FormData();
+                        formData.append('action', 'addTask');
+                        formData.append('userId', currentUserId);
+                        formData.append('text', text.trim());
+                        formData.append('priority', priority);
+
+                        const response = await fetch(API_ENDPOINT, { method: 'POST', body: formData });
+                        const result = await response.json();
+
+                        if (response.ok && result.success && result.task) {
+                             // Replace temp task with real data from server
+                             const index = tasks.findIndex(t => t.id === tempId);
+                             if (index !== -1) {
+                                 // Ensure boolean and string types match local structure
+                                 result.task.completed = Boolean(result.task.completed);
+                                 result.task.id = String(result.task.id);
+                                 tasks[index] = result.task;
+                             } else {
+                                 // If temp task somehow disappeared, add the real one
+                                 tasks.unshift(result.task);
+                             }
+                             uiManager.renderTasks(); // Re-render with correct ID, order, and data
+                             uiManager.showRandomQuoteModal(); // Show quote on success
+                        } else {
+                            console.error("Add Task Error:", result.message);
+                            uiManager.showModal("Error", `Failed to add task: ${result.message || 'Server error'}`);
+                            // Remove optimistic task if save failed
+                            tasks = tasks.filter(t => t.id !== tempId);
+                            uiManager.renderTasks();
+                        }
+                    } catch (error) {
+                        console.error("Network error adding task:", error);
+                        uiManager.showModal("Error", "Network error when adding task.");
+                        // Remove optimistic task on network error
+                        tasks = tasks.filter(t => t.id !== tempId);
+                        uiManager.renderTasks();
+                    }
+                },
+
+                toggleComplete: async (id) => {
+                     if (!currentUserId) return;
+                     const taskIndex = tasks.findIndex(task => String(task.id) === String(id)); // Ensure string comparison
+                     if (taskIndex === -1) return;
+
+                     const task = tasks[taskIndex];
+                     const originalCompleted = task.completed;
+                     const newCompletedState = !originalCompleted;
+
+                     // Optimistic UI Update
+                     tasks[taskIndex].completed = newCompletedState;
+                      if (newCompletedState && !originalCompleted) {
+                         stats.tasksCompletedToday += 1;
+                      } else if (!newCompletedState && originalCompleted && stats.tasksCompletedToday > 0) {
+                         stats.tasksCompletedToday -= 1;
+                      }
+                      uiManager.renderTasks(); // Render change immediately
+                      statsManager.updateDailyCompletion(); // Update stats based on optimistic change
+                      storageManager.saveStats(); // Save updated daily count
+
+                      if (newCompletedState) {
+                         uiManager.triggerConfetti();
+                         soundManager.playTaskComplete();
+                         uiManager.showPositiveReinforcement();
+                      }
+
+                     try {
+                         const formData = new FormData();
+                         formData.append('action', 'updateTask');
+                         formData.append('userId', currentUserId);
+                         formData.append('taskId', id);
+                         formData.append('completed', newCompletedState); // Send true/false
+
+                         const response = await fetch(API_ENDPOINT, { method: 'POST', body: formData });
+                         const result = await response.json();
+
+                         if (!response.ok || !result.success) {
+                             console.error("Toggle Complete Error:", result.message);
+                             // Revert optimistic UI change
+                             tasks[taskIndex].completed = originalCompleted;
+                             // Revert stats change
+                             if (newCompletedState && !originalCompleted) {
+                                stats.tasksCompletedToday -= 1;
+                             } else if (!newCompletedState && originalCompleted) {
+                                stats.tasksCompletedToday += 1; // Increment back if revert needed
+                             }
+                              uiManager.renderTasks(); // Re-render to show original state
+                              statsManager.updateDailyCompletion(); // Correct stats display if needed
+                              storageManager.saveStats(); // Save corrected stats
+                             uiManager.showModal("Error", `Failed to update task status: ${result.message || 'Server error'}`);
+                         }
+                         // No need to re-render on success, optimistic update is correct
+                     } catch (error) {
+                         console.error("Network error updating task:", error);
+                         // Revert optimistic UI change
+                         tasks[taskIndex].completed = originalCompleted;
+                          // Revert stats change
+                          if (newCompletedState && !originalCompleted) {
+                            stats.tasksCompletedToday -= 1;
+                         } else if (!newCompletedState && originalCompleted) {
+                            stats.tasksCompletedToday += 1;
+                         }
+                          uiManager.renderTasks(); // Re-render to show original state
+                          statsManager.updateDailyCompletion(); // Correct stats display
+                          storageManager.saveStats(); // Save corrected stats
+                         uiManager.showModal("Error", "Network error when updating task status.");
+                     }
+                },
+
+                deleteTask: async (id) => {
+                     if (!currentUserId) return;
+                     const taskIndex = tasks.findIndex(task => String(task.id) === String(id));
+                     if (taskIndex === -1) return;
+
+                     const taskToDelete = tasks[taskIndex]; // Store for potential revert
+                     const wasCompleted = taskToDelete.completed;
+
+                     // Optimistic UI Update
+                     tasks.splice(taskIndex, 1);
+                     uiManager.renderTasks();
+                     soundManager.playButtonClick(); // Play sound immediately
+
+                     // Adjust completed count if the deleted task was completed today
+                     // This requires knowing if it was completed *today* vs previously
+                     // For simplicity, we won't adjust the daily count on delete for now,
+                     // but a more complex system might track completion dates.
+                     // uiManager.updateStats(); // Update progress bar etc.
+
+                     try {
+                         const formData = new FormData();
+                         formData.append('action', 'deleteTask');
+                         formData.append('userId', currentUserId);
+                         formData.append('taskId', id);
+
+                         const response = await fetch(API_ENDPOINT, { method: 'POST', body: formData });
+                         const result = await response.json();
+
+                         if (!response.ok || !result.success) {
+                             console.error("Delete Task Error:", result.message);
+                             // Revert UI change
+                             tasks.splice(taskIndex, 0, taskToDelete); // Add back at original position
+                             uiManager.renderTasks();
+                             // uiManager.updateStats(); // Revert stats display update
+                             uiManager.showModal("Error", `Failed to delete task: ${result.message || 'Server error'}`);
+                         }
+                         // No UI change needed on success, task already removed optimistically
+                     } catch (error) {
+                         console.error("Network error deleting task:", error);
+                         // Revert UI change
+                         tasks.splice(taskIndex, 0, taskToDelete); // Add back at original position
+                         uiManager.renderTasks();
+                         // uiManager.updateStats(); // Revert stats display update
+                         uiManager.showModal("Error", "Network error when deleting task.");
+                     }
+                },
+
+                editTask: async (id, newText) => {
+                    if (!newText.trim() || !currentUserId) return;
+                    const taskIndex = tasks.findIndex(task => String(task.id) === String(id));
+                    if (taskIndex === -1) return;
+
+                    const originalText = tasks[taskIndex].text;
+                    const trimmedText = newText.trim();
+
+                    if (originalText === trimmedText) { // No actual change
+                        uiManager.renderTasks(); // Just redraw to hide input
+                        return;
+                    }
+
+                    // Optimistic UI Update
+                    tasks[taskIndex].text = trimmedText;
+                    uiManager.renderTasks();
+                    soundManager.playButtonClick();
+
+                     try {
+                         const formData = new FormData();
+                         formData.append('action', 'updateTask');
+                         formData.append('userId', currentUserId);
+                         formData.append('taskId', id);
+                         formData.append('text', trimmedText);
+
+                         const response = await fetch(API_ENDPOINT, { method: 'POST', body: formData });
+                         const result = await response.json();
+
+                         if (!response.ok || !result.success) {
+                             console.error("Edit Task Error:", result.message);
+                             // Revert UI change
+                             tasks[taskIndex].text = originalText;
+                             uiManager.renderTasks();
+                             uiManager.showModal("Error", `Failed to save task changes: ${result.message || 'Server error'}`);
+                         }
+                         // No UI change needed on success
+                     } catch (error) {
+                         console.error("Network error saving task:", error);
+                          // Revert UI change
+                          tasks[taskIndex].text = originalText;
+                          uiManager.renderTasks();
+                         uiManager.showModal("Error", "Network error when saving task changes.");
+                     }
+                },
+
+                 reorderTasks: async (draggedId, targetId) => {
+                     if (!currentUserId) return;
+                     const draggedIndex = tasks.findIndex(task => String(task.id) === String(draggedId));
+                     let targetIndex = tasks.findIndex(task => String(task.id) === String(targetId));
+
+                     if (draggedIndex === -1 || targetIndex === -1 || draggedIndex === targetIndex) return;
+
+                     const originalTasks = [...tasks]; // Backup original order
+
+                     // --- Perform local reorder for immediate UI feedback ---
+                     const [draggedTask] = tasks.splice(draggedIndex, 1);
+
+                     // Recalculate target index AFTER removing the dragged item to insert correctly
+                     const actualTargetIndex = tasks.findIndex(task => String(task.id) === String(targetId));
+
+                     // Determine insertion point based on original indices
+                     if (draggedIndex < actualTargetIndex) {
+                         // Dragging Down: Insert *after* the target's new position
+                         tasks.splice(actualTargetIndex + 1, 0, draggedTask);
+                     } else {
+                         // Dragging Up: Insert *at* the target's new position
+                         tasks.splice(actualTargetIndex, 0, draggedTask);
+                     }
+
+                     // Update sort_order property locally for correct rendering and API call
+                     tasks.forEach((task, index) => task.sort_order = index);
+
+                     uiManager.renderTasks(); // Update UI optimistically with new order
+                     soundManager.playButtonClick();
+
+                     // Prepare data for API: Send the entire new order of IDs
+                     const orderedIds = tasks.map(task => task.id);
+
+                     try {
+                         // Send as JSON payload
+                         const response = await fetch(API_ENDPOINT, {
+                             method: 'POST',
+                             headers: {
+                                 'Content-Type': 'application/json', // Specify JSON content type
+                             },
+                             body: JSON.stringify({
+                                 action: 'reorderTasks',
+                                 userId: currentUserId,
+                                 orderedIds: orderedIds // Send the array of IDs
+                             })
+                         });
+
+                         const result = await response.json();
+
+                         if (!response.ok || !result.success) {
+                             console.error("Reorder Tasks Error:", result.message);
+                             tasks = originalTasks; // Revert to original order
+                             uiManager.renderTasks();
+                             uiManager.showModal("Error", `Failed to save new task order: ${result.message || 'Server error'}`);
+                         }
+                         // No UI change needed on success, optimistic update holds
+
+                     } catch (error) {
+                         console.error("Network error reordering tasks:", error);
+                         tasks = originalTasks; // Revert to original order
+                         uiManager.renderTasks();
+                         uiManager.showModal("Error", "Network error when saving task order.");
+                     }
+                 }
+            };
+
+            // --- Timer Manager ---
+            const timerManager = {
+                startPause: () => {
+                    soundManager.playButtonClick();
+                    if (timerState.running) { timerManager.pause(); }
+                    else { timerManager.start(); }
+                },
+                start: () => {
+                    if (timerState.running) return;
+
+                    // Ensure audio context is available (required by some browsers)
+                     if (settings.soundUI) soundManager.play(audioButtonClick); // Play click if UI sounds enabled
+
+
+                    timerState.running = true;
+                    uiManager.updateTimerButtons();
+                    const messagePool = (timerState.mode === 'pomodoro' || timerState.mode === 'custom') ? timerFocusMessages : timerBreakMessages;
+                    uiManager.updateTimerMessage(messagePool[Math.floor(Math.random() * messagePool.length)]);
+
+                    if (timerState.mode === 'stopwatch') {
+                         if (timerInterval) clearInterval(timerInterval); // Clear any existing interval
+                        timerInterval = setInterval(() => {
+                            timerState.stopwatchTime++;
+                            uiManager.updateTimerDisplay();
+                        }, 1000);
+                    } else {
+                        if (timerState.timeLeft <= 0) { // Ensure time is set if starting from 0
+                            timerState.totalTime = timerManager.getDuration(timerState.mode) * 60;
+                            timerState.timeLeft = timerState.totalTime;
+                        }
+                         if (timerState.totalTime <= 0) { // Prevent starting with 0 duration
+                             console.warn("Timer duration invalid.");
+                             timerState.running = false;
+                             uiManager.updateTimerButtons();
+                             uiManager.updateTimerMessage("Set a valid duration.");
+                             return;
+                         }
+                          if (timerInterval) clearInterval(timerInterval); // Clear any existing interval
+                        timerInterval = setInterval(() => {
+                            if (timerState.timeLeft > 0) {
+                                timerState.timeLeft--;
+                                uiManager.updateTimerDisplay();
+                            } else {
+                                timerManager.complete();
+                            }
+                        }, 1000);
+                    }
+                     if (settings.soundBackground !== 'none') { soundManager.playBackground(settings.soundBackground); }
+                },
+                pause: () => {
+                    if (!timerState.running) return;
+                    timerState.running = false;
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    uiManager.updateTimerButtons();
+                    uiManager.updateTimerMessage("Timer paused.");
+                    document.title = '✔️ TaskMaster | Your Focus Hub';
+                    if (currentBgAudio) { currentBgAudio.pause(); }
+                },
+                reset: () => {
+                    soundManager.playButtonClick();
+                    timerManager.pause(); // Ensure timer is stopped
+                    if (timerState.mode === 'stopwatch') {
+                        timerState.stopwatchTime = 0;
+                    } else {
+                        // Recalculate duration based on current settings
+                        timerState.totalTime = timerManager.getDuration(timerState.mode) * 60;
+                        timerState.timeLeft = timerState.totalTime;
+                    }
+                    uiManager.updateTimerDisplay();
+                    uiManager.updateTimerButtons();
+                    uiManager.updateTimerMessage("Timer reset. Ready?");
+                    soundManager.stopBackground();
+                },
+                complete: () => {
+                    const completedMode = timerState.mode; // Store mode before pausing/resetting
+
+                    timerManager.pause(); // Stop the timer interval
+                    soundManager.playTimerEnd();
+                    uiManager.triggerConfetti();
+
+                    let nextMode = 'pomodoro';
+                    let focusTimeEarned = 0;
+                    let modalTitle = "Session Complete!";
+                    let modalMessage = "Great job!";
+
+                    if (completedMode === 'pomodoro') {
+                        stats.pomodorosToday += 1;
+                        pomodoroCycleCount += 1;
+                        stats.pomodoroHistory.push('P');
+                        focusTimeEarned = settings.pomodoroDuration;
+                         // Determine next break based on cycle count BEFORE potentially switching mode
+                        if (pomodoroCycleCount > 0 && pomodoroCycleCount % 4 === 0) {
+                            nextMode = 'longBreak';
+                             stats.pomodoroHistory.push('L'); // Log long break start intention
+                            modalTitle = "Pomodoro Complete! 🎉";
+                            modalMessage = `Awesome focus! Time for a well-deserved long break (${settings.longBreakDuration}m).`;
+                        } else {
+                            nextMode = 'shortBreak';
+                             stats.pomodoroHistory.push('S'); // Log short break start intention
+                             modalTitle = "Pomodoro Complete! 👍";
+                            modalMessage = `Nice work! Take a short break (${settings.shortBreakDuration}m).`;
+                        }
+                    } else if (completedMode === 'shortBreak' || completedMode === 'longBreak') {
+                        nextMode = 'pomodoro';
+                        modalTitle = "Break Over!";
+                        modalMessage = "Ready for the next focus session? Let's go! 💪";
+                         // No focus time earned during breaks
+                    } else if (completedMode === 'custom') {
+                        focusTimeEarned = parseInt(customMinutesInput.value) || 0;
+                        modalTitle = "Custom Timer Done! ✅";
+                        modalMessage = `You completed your ${focusTimeEarned}m session! What's next?`;
+                        nextMode = 'pomodoro'; // Default back to pomodoro after custom
+                    }
+                     // Stopwatch doesn't "complete" in the same way, it just stops/resets.
+
+                    if (focusTimeEarned > 0) { stats.totalFocusTimeToday += focusTimeEarned; }
+                    statsManager.updateDailyCompletion(); // Update streak etc. if needed
+                    storageManager.saveStats(); // Save updated stats
+                    uiManager.updateStats(); // Update UI display
+
+                    // Show completion modal *before* switching mode
+                    uiManager.showModal(modalTitle, modalMessage, false, null, '', 'Okay');
+
+                    // Switch mode but don't auto-start
+                    timerManager.switchMode(nextMode, false); // Pass flag to prevent sound/message spam
+
+                    // Reset the completed timer to its initial state after handling completion logic
+                    timerState.timeLeft = timerManager.getDuration(completedMode) * 60;
+                    timerState.totalTime = timerState.timeLeft;
+                    if (completedMode === 'stopwatch') timerState.stopwatchTime = 0;
+                    uiManager.updateTimerDisplay(); // Update display for the completed timer (now reset)
+                    uiManager.updateTimerButtons(); // Ensure buttons reflect non-running state
+
+                },
+                 switchMode: (newMode, playSoundAndMessage = true) => { // Added flag
+                    if (!newMode || timerState.mode === newMode) return;
+
+                    if (playSoundAndMessage) soundManager.playButtonClick();
+                    timerManager.pause(); // Stop current timer if running
+                    timerState.mode = newMode;
+                    timerModesBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === newMode));
+                    if(customTimerInputArea) customTimerInputArea.classList.toggle('hidden', newMode !== 'custom');
+
+                    // Reset timer values for the new mode
+                    if (newMode === 'stopwatch') {
+                        timerState.stopwatchTime = 0;
+                        timerState.timeLeft = 0;
+                        timerState.totalTime = 0;
+                    } else {
+                        timerState.totalTime = timerManager.getDuration(newMode) * 60;
+                        timerState.timeLeft = timerState.totalTime;
+                        timerState.stopwatchTime = 0;
+                    }
+
+                    uiManager.updateTimerDisplay(); // Update display immediately
+                    uiManager.updateTimerButtons(); // Update buttons for new state
+                    if (playSoundAndMessage) {
+                        uiManager.updateTimerMessage(`Switched to ${timerModeLabel.textContent}. Press Start when ready.`);
+                    }
+                    soundManager.stopBackground(); // Stop any background sound
+                 },
+                 getDuration: (mode) => {
+                     try {
+                         // Ensure settings are numbers, provide defaults
+                         const pomodoroDur = parseInt(settings.pomodoroDuration) || 25;
+                         const shortBreakDur = parseInt(settings.shortBreakDuration) || 5;
+                         const longBreakDur = parseInt(settings.longBreakDuration) || 15;
+                         const customDur = parseInt(customMinutesInput?.value) || 10;
+
+                         switch (mode) {
+                            case 'pomodoro': return pomodoroDur;
+                            case 'shortBreak': return shortBreakDur;
+                            case 'longBreak': return longBreakDur;
+                            case 'custom': return customDur > 0 ? customDur : 10; // Ensure custom > 0
+                            default: return 0;
+                         }
+                     } catch (e) {
+                         console.error("Error getting duration:", e);
+                         return (mode === 'pomodoro') ? 25 : (mode === 'shortBreak' ? 5 : (mode === 'longBreak' ? 15 : 10)); // Fallbacks
+                     }
+                 },
+                 updateDurationsFromSettings: () => {
+                     // Update button labels to reflect current settings
+                     const pomoBtn = document.querySelector('.timer-modes button[data-mode="pomodoro"]');
+                     const shortBtn = document.querySelector('.timer-modes button[data-mode="shortBreak"]');
+                     const longBtn = document.querySelector('.timer-modes button[data-mode="longBreak"]');
+                     if(pomoBtn) pomoBtn.textContent = `Pomodoro (${settings.pomodoroDuration || 25}m)`;
+                     if(shortBtn) shortBtn.textContent = `Short Break (${settings.shortBreakDuration || 5}m)`;
+                     if(longBtn) longBtn.textContent = `Long Break (${settings.longBreakDuration || 15}m)`;
+
+                     // If the timer is NOT running and its mode matches one that was updated, reset it
+                     if (!timerState.running) {
+                          if (timerState.mode === 'pomodoro' || timerState.mode === 'shortBreak' || timerState.mode === 'longBreak') {
+                               timerManager.reset(); // Reset re-calculates time based on new settings
+                          } else {
+                              uiManager.updateTimerDisplay(); // Still update display label if mode is different (e.g., Custom)
+                          }
+                     } else {
+                         // If timer is running, just update the label, don't change the running time
+                         uiManager.updateTimerDisplay();
+                     }
+                 }
+            };
+
+            // --- Stats & Daily Reset Manager ---
+            const statsManager = {
+                getTodayDateString: () => new Date().toISOString().split('T')[0],
+                getCurrentWeekString: (date = new Date()) => {
+                     // Simple week number calculation (ISO 8601 might be more accurate but complex)
+                     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                     const dayNum = d.getUTCDay() || 7;
+                     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+                     const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+                     const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+                     return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+                 },
+                checkDailyReset: () => {
+                    const today = statsManager.getTodayDateString();
+                    const lastVisit = stats.lastVisitDate;
+
+                    if (lastVisit && lastVisit !== today) {
+                        console.log("New day detected. Processing daily reset...");
+                        const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+                        const yesterdayString = yesterday.toISOString().split('T')[0];
+
+                        // Use yesterday's stats (stored before reset) for summary
+                        const completedYesterday = stats.tasksCompletedToday;
+                        // "Missed" is hard to define without due dates. Let's assume it's tasks left pending from yesterday.
+                        // This requires tasks to have a creation/due date. For simplicity, we'll skip accurate 'missed' for now.
+                        const missedYesterday = 0; // Simplification
+                        let streakMaintained = false;
+
+                        // Check if *any* activity happened yesterday to maintain streak
+                        // More robust: check if a task was completed or pomodoro run yesterday
+                        if (stats.lastCompletedDate === yesterdayString) {
+                            streakMaintained = true;
+                            console.log("Daily streak maintained.");
+                        } else {
+                            stats.dailyStreak = 0; // Reset streak if nothing completed yesterday
+                            console.log("Daily streak broken or first day.");
+                        }
+
+                        // Store summary data *before* resetting counters
+                        stats.dailySummary = { completed: completedYesterday, missed: missedYesterday, streakMaintained: streakMaintained };
+
+                        // Reset daily counters
+                        stats.tasksCompletedToday = 0;
+                        stats.pomodorosToday = 0;
+                        stats.totalFocusTimeToday = 0;
+                        stats.pomodoroHistory = [];
+                        pomodoroCycleCount = 0; // Reset cycle count
+
+                        statsManager.updateWeeklyStreak(today); // Update weekly based on the *new* day's week
+
+                        // Show summary modal only if there was activity or streak change might be interesting
+                        if (completedYesterday > 0 || !streakMaintained) {
+                             // Delay showing summary slightly to allow UI to settle
+                             setTimeout(() => uiManager.showDailySummary(stats.dailySummary), 500);
+                        } else {
+                             stats.dailySummary = null; // No need to show empty summary
+                        }
+                        console.log("Daily counters reset.");
+
+                    } else if (!lastVisit) {
+                        console.log("First visit detected.");
+                        /* First visit logic if needed */
+                    } else {
+                        // console.log("Same day visit.");
+                        stats.dailySummary = null; /* Clear any stale summary */
+                    }
+
+                    // Always update last visit date and save stats
+                    stats.lastVisitDate = today;
+                    storageManager.saveStats();
+                    // UI stats updated during init/render
+                },
+                 updateDailyCompletion: () => {
+                     // Called when a task is completed or pomodoro finishes
+                     const today = statsManager.getTodayDateString();
+                     let statsChanged = false;
+
+                     if (stats.lastCompletedDate !== today) { // Only update streak once per day
+                        const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+                        const yesterdayString = yesterday.toISOString().split('T')[0];
+
+                        if (stats.lastCompletedDate === yesterdayString) {
+                            stats.dailyStreak += 1;
+                            console.log(`Daily streak incremented to ${stats.dailyStreak}`);
+                        } else {
+                            stats.dailyStreak = 1; // Start or restart streak
+                            console.log(`Daily streak started/reset to 1`);
+                        }
+
+                        stats.lastCompletedDate = today;
+                        statsManager.updateWeeklyStreak(today); // Check weekly streak whenever daily is updated
+                        statsChanged = true;
+                     }
+
+                     // Always update stats display even if streak didn't change (e.g., pomodoro count)
+                     uiManager.updateStats();
+                     if (statsChanged) {
+                        storageManager.saveStats(); // Save if streak/date changed
+                     }
+                 },
+                 updateWeeklyStreak: (todayDateString) => {
+                     const currentWeek = statsManager.getCurrentWeekString(new Date(todayDateString));
+                     if (stats.lastCompletedWeek !== currentWeek) {
+                         const date = new Date(todayDateString);
+                         const lastWeekDate = new Date(date); lastWeekDate.setDate(date.getDate() - 7);
+                         const expectedLastWeekString = statsManager.getCurrentWeekString(lastWeekDate);
+
+                         if (stats.lastCompletedWeek === expectedLastWeekString) {
+                            stats.weeklyStreak += 1;
+                            console.log(`Weekly streak incremented to ${stats.weeklyStreak}`);
+                        } else {
+                            stats.weeklyStreak = 1; // Start or restart weekly streak
+                            console.log(`Weekly streak started/reset to 1`);
+                        }
+                         stats.lastCompletedWeek = currentWeek;
+                         // Save happens in updateDailyCompletion
+                     }
+                 },
+                 resetAllData: () => {
+                    uiManager.showModal(
+                         "Confirm Reset",
+                         "Reset ALL data? Clears tasks for this user from server & resets local settings/stats. Cannot be undone.",
+                         true, // Show confirm button
+                         async () => { // Confirm callback - ASYNC
+                             timerManager.pause();
+                             timerManager.reset();
+                             soundManager.stopBackground();
+                             storageManager.clearAll(); // Clear local settings/stats
+
+                             // Clear tasks locally. The API will return empty on next load for this user.
+                             // For a full reset, you might want an API call to delete the user or all their tasks.
+                             // But clearing locally and resetting settings achieves a similar effect for the *current* user session.
+                             tasks = [];
+
+                             // Reset state variables
+                             settings = { ...defaultSettings };
+                             stats = { ...defaultStats };
+                             currentFilter = 'all';
+                             pomodoroCycleCount = 0;
+                             currentUserId = null; // Force user re-fetch on re-init
+
+                             // Re-initialize UI - this will fetch user (or create default 'User') and empty tasks
+                             await initializer.init(); // Full re-init - NOW ASYNC
+                             uiManager.hideSettings(); // Close settings if open
+                             uiManager.showModal("Data Reset", "Tasks cleared and local data reset.", false, null, '', 'Okay');
+                         },
+                         'Yes, Reset Data',
+                         'Cancel'
+                     );
+                 }
+            };
+
+            // --- Event Listeners ---
+            const setupEventListeners = () => {
+                // --- Theme and Settings ---
+                if (themeToggleBtn) themeToggleBtn.addEventListener('click', () => {
+                    soundManager.playButtonClick();
+                    settings.theme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+                    uiManager.applyTheme(settings.theme);
+                    storageManager.saveSettings();
+                });
+
+                if (settingsBtn) settingsBtn.addEventListener('click', () => { soundManager.playButtonClick(); uiManager.showSettings(); });
+                if (settingsCloseBtn) settingsCloseBtn.addEventListener('click', () => { soundManager.playButtonClick(); uiManager.hideSettings(); });
+                if (settingsOverlay) settingsOverlay.addEventListener('click', (e) => { if (e.target === settingsOverlay) { soundManager.playButtonClick(); uiManager.hideSettings(); } });
+
+                // --- Save Settings ---
+                if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', async () => { // Made async for potential reload
+                    soundManager.playButtonClick();
+                    const oldUsername = settings.username;
+                    const newUsername = usernameInput?.value.trim() || defaultSettings.username;
+
+                    settings.username = newUsername;
+                    settings.pomodoroDuration = parseInt(pomodoroDurationInput?.value) || defaultSettings.pomodoroDuration;
+                    settings.shortBreakDuration = parseInt(shortBreakDurationInput?.value) || defaultSettings.shortBreakDuration;
+                    settings.longBreakDuration = parseInt(longBreakDurationInput?.value) || defaultSettings.longBreakDuration;
+                    settings.soundUI = toggleUiSounds?.checked ?? defaultSettings.soundUI;
+                    settings.soundAlerts = toggleTimerAlerts?.checked ?? defaultSettings.soundAlerts;
+                    const selectedBgSound = backgroundSoundSelect?.value || defaultSettings.soundBackground;
+
+                    // Update sounds immediately
+                    soundManager.updateMuteStates();
+                    if (selectedBgSound !== settings.soundBackground) {
+                        soundManager.playBackground(selectedBgSound); // This also saves the sound setting
+                    }
+                    // Save all other settings
+                    storageManager.saveSettings();
+
+                    uiManager.updateUsernameDisplay();
+                    timerManager.updateDurationsFromSettings(); // Update timer displays/durations
+                    uiManager.hideSettings();
+
+                    // If username changed, re-initialize to load new user's data
+                    if (newUsername !== oldUsername) {
+                        uiManager.showModal("Username Changed", "Loading tasks for new user...", false, null, '', 'Okay');
+                        await initializer.init(); // Reload data for the new user
+                    } else {
+                         uiManager.showModal("Settings Saved", "Your preferences have been updated.", false, null, '', 'Okay');
+                    }
+                });
+
+                // --- Reset Data ---
+                if (resetDataBtn) resetDataBtn.addEventListener('click', () => { soundManager.playButtonClick(); statsManager.resetAllData(); });
+
+                // --- Add Task ---
+                if (addTaskForm) addTaskForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    taskManager.addTask(newTaskInput.value, newTaskPriority.value);
+                });
+
+                // --- Task List Event Delegation (Clicks, Edits) ---
+                if (taskList) {
+                    taskList.addEventListener('click', (e) => {
+                        const taskItem = e.target.closest('.task-item');
+                        if (!taskItem) return;
+                        const taskId = taskItem.dataset.id;
+                        // Ignore clicks if task ID is temporary (still saving)
+                        if (taskId && taskId.startsWith('temp-')) return;
+
+                        if (e.target.type === 'checkbox') {
+                            taskManager.toggleComplete(taskId);
+                        }
+                        else if (e.target.classList.contains('delete-btn')) {
+                             soundManager.playButtonClick();
+                             uiManager.showModal("Confirm Deletion", "Are you sure you want to delete this task?", true, () => {
+                                taskManager.deleteTask(taskId);
+                             }, 'Delete', 'Cancel');
+                        }
+                        else if (e.target.classList.contains('edit-btn')) {
+                            soundManager.playButtonClick();
+                            const textSpan = taskItem.querySelector('.task-text');
+                            const editInput = taskItem.querySelector('.edit-input');
+                            const saveBtn = taskItem.querySelector('.save-btn');
+                            const editBtn = taskItem.querySelector('.edit-btn');
+                            if (textSpan && editInput && saveBtn && editBtn) {
+                                textSpan.style.display = 'none';
+                                editInput.style.display = 'block';
+                                // Ensure input value reflects current text content accurately
+                                editInput.value = textSpan.textContent;
+                                editInput.focus();
+                                editInput.select(); // Select text for easy replacement
+                                saveBtn.style.display = 'inline-block';
+                                editBtn.style.display = 'none';
+                            }
+                        }
+                        else if (e.target.classList.contains('save-btn')) {
+                            // Save button click implicitly handled by keypress/blur below
+                            const editInput = taskItem.querySelector('.edit-input');
+                            if (editInput) taskManager.editTask(taskId, editInput.value);
+                        }
+                    });
+
+                    // --- Task Editing - Keypress (Enter) ---
+                    taskList.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' && e.target.classList.contains('edit-input')) {
+                            e.preventDefault(); // Prevent form submission if inside one
+                            const taskItem = e.target.closest('.task-item');
+                            if (taskItem) taskManager.editTask(taskItem.dataset.id, e.target.value);
+                        }
+                    });
+
+                    // --- Task Editing - Blur (Clicking Away) ---
+                    taskList.addEventListener('focusout', (e) => {
+                        if (e.target.classList.contains('edit-input')) {
+                           const taskItem = e.target.closest('.task-item');
+                           if (taskItem) {
+                                const textSpan = taskItem.querySelector('.task-text');
+                                const editInput = taskItem.querySelector('.edit-input');
+                                const saveBtn = taskItem.querySelector('.save-btn');
+                                const editBtn = taskItem.querySelector('.edit-btn');
+                                // Only revert display if save button wasn't clicked and input is still visible
+                                if (saveBtn?.style.display !== 'none' && editInput?.style.display !== 'none') {
+                                     // Potential race condition? Let's try saving on blur too.
+                                     // taskManager.editTask(taskItem.dataset.id, e.target.value);
+                                     // Simpler: just revert the UI if focus is lost without hitting Enter/Save explicitly
+                                     if (textSpan) textSpan.style.display = 'block';
+                                     if (editInput) editInput.style.display = 'none';
+                                     if (saveBtn) saveBtn.style.display = 'none';
+                                     if (editBtn) editBtn.style.display = 'inline-block';
+                                } else if (editInput?.style.display === 'none') {
+                                    // If edit input was already hidden (by save), ensure UI is correct state
+                                     if (textSpan) textSpan.style.display = 'block';
+                                     if (saveBtn) saveBtn.style.display = 'none';
+                                     if (editBtn) editBtn.style.display = 'inline-block';
+                                }
+                           }
+                        }
+                    });
+
+                    // --- Drag and Drop Event Listeners ---
+                    taskList.addEventListener('dragstart', (e) => {
+                        const taskItem = e.target.closest('.task-item');
+                        if (taskItem && taskItem.draggable) {
+                            // Ignore drag if task ID is temporary
+                            if (taskItem.dataset.id?.startsWith('temp-')) {
+                                e.preventDefault();
+                                return;
+                            }
+                            draggedItem = taskItem;
+                            setTimeout(() => taskItem.classList.add('dragging'), 0); // Delay avoids capturing drag image issue
+                            e.dataTransfer.effectAllowed = 'move';
+                            e.dataTransfer.setData('text/plain', taskItem.dataset.id); // Set data to transfer
+                        } else {
+                            e.preventDefault(); // Prevent dragging non-task items
+                        }
+                    });
+
+                    taskList.addEventListener('dragend', (e) => {
+                        if (draggedItem) {
+                            draggedItem.classList.remove('dragging');
+                        }
+                        // Clear any lingering drag-over styles
+                        taskList.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+                        draggedItem = null;
+                    });
+
+                    taskList.addEventListener('dragover', (e) => {
+                        e.preventDefault(); // Necessary to allow drop
+                        const targetItem = e.target.closest('.task-item');
+                        // Clear previous drag-over highlights
+                         taskList.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+
+                        if (targetItem && targetItem !== draggedItem) {
+                             targetItem.classList.add('drag-over'); // Highlight the item being hovered over
+                            e.dataTransfer.dropEffect = 'move';
+                        } else {
+                            // If hovering over the list itself (gap), allow drop but don't highlight item
+                            e.dataTransfer.dropEffect = 'move';
+                        }
+                    });
+
+                    taskList.addEventListener('dragleave', (e) => {
+                        // Remove highlight if cursor leaves a potential drop target
+                        const targetItem = e.target.closest('.task-item');
+                        if (targetItem) {
+                            targetItem.classList.remove('drag-over');
+                        }
+                    });
+
+                    taskList.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        const targetItem = e.target.closest('.task-item');
+                        // Clear any lingering drag-over styles
+                        taskList.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+
+                        if (draggedItem && targetItem && targetItem !== draggedItem) {
+                            const draggedId = draggedItem.dataset.id;
+                            const targetId = targetItem.dataset.id;
+                            taskManager.reorderTasks(draggedId, targetId);
+                        } else if (draggedItem && !targetItem) {
+                            // Handle dropping in the empty space (usually means append to end)
+                            // The reorderTasks logic needs adjustment or a separate handler if this is desired.
+                            // For now, dropping requires a target item.
+                            console.log("Dropped in empty space - currently ignored.");
+                        }
+
+                        if (draggedItem) {
+                            draggedItem.classList.remove('dragging'); // Ensure dragging class removed
+                        }
+                        draggedItem = null;
+                    });
+                } // End taskList event listeners check
+
+                // --- Filter Buttons ---
+                filterBtns.forEach(btn => { btn.addEventListener('click', () => {
+                    soundManager.playButtonClick();
+                    currentFilter = btn.dataset.filter;
+                    uiManager.updateFilterButtons();
+                    uiManager.renderTasks(); // Re-render the list with the new filter
+                    });
+                });
+
+                // --- Timer Mode Buttons ---
+                timerModesBtns.forEach(btn => { btn.addEventListener('click', () => {
+                    timerManager.switchMode(btn.dataset.mode);
+                    });
+                });
+
+                // --- Timer Controls ---
+                if (startPauseBtn) startPauseBtn.addEventListener('click', timerManager.startPause);
+                if (resetBtn) resetBtn.addEventListener('click', timerManager.reset);
+
+                // --- Modal Close Buttons (Delegation) ---
+                document.addEventListener('click', (e) => {
+                    if (e.target.matches('#modal-close-btn')) {
+                        soundManager.playButtonClick();
+                        uiManager.hideModal();
+                    }
+                    if (e.target.matches('#daily-summary-close-btn')) {
+                         soundManager.playButtonClick();
+                         uiManager.hideDailySummary();
+                         // Clear summary from stats object after viewing
+                         stats.dailySummary = null;
+                         storageManager.saveStats();
+                    }
+                     // Close modals on overlay click (optional but common)
+                     if (e.target.matches('#modal-overlay')) {
+                        soundManager.playButtonClick();
+                        uiManager.hideModal();
+                    }
+                     if (e.target.matches('#daily-summary-overlay')) {
+                        soundManager.playButtonClick();
+                        uiManager.hideDailySummary();
+                        stats.dailySummary = null;
+                        storageManager.saveStats();
+                    }
+                });
+
+                // --- Keyboard Shortcuts ---
+                document.addEventListener('keydown', (e) => {
+                    const activeEl = document.activeElement;
+                    const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT');
+
+                    // Start/Pause Timer (Spacebar, unless typing)
+                    if (e.code === 'Space' && !isInputFocused) {
+                        e.preventDefault();
+                        timerManager.startPause();
+                    }
+                    // Close Modals/Settings (Escape)
+                    if (e.key === 'Escape') {
+                         if (settingsOverlay?.classList.contains('visible')) {
+                             soundManager.playButtonClick(); uiManager.hideSettings();
+                        } else if (modalOverlay?.classList.contains('visible')) {
+                            soundManager.playButtonClick(); uiManager.hideModal();
+                        } else if (dailySummaryOverlay?.classList.contains('visible')) {
+                            soundManager.playButtonClick(); uiManager.hideDailySummary(); stats.dailySummary = null; storageManager.saveStats();
+                        } else if (activeEl && activeEl.classList.contains('edit-input')) {
+                            // If editing a task, Escape cancels the edit (reverts display)
+                            const taskItem = activeEl.closest('.task-item');
+                            const textSpan = taskItem?.querySelector('.task-text');
+                            const saveBtn = taskItem?.querySelector('.save-btn');
+                            const editBtn = taskItem?.querySelector('.edit-btn');
+                            if (textSpan) textSpan.style.display = 'block';
+                            if (activeEl) activeEl.style.display = 'none';
+                            if (saveBtn) saveBtn.style.display = 'none';
+                            if (editBtn) editBtn.style.display = 'inline-block';
+                            // Optionally, you could revert the text value here too if needed
+                        }
+                    }
+                    // Hidden Shortcut Example (Ctrl+H)
+                    if (e.ctrlKey && e.key === 'h' && !isInputFocused) {
+                         e.preventDefault();
+                         uiManager.showModal("🤫 Hidden Tip!", "Try the 'Eat The Frog' technique: tackle your hardest task first thing!");
+                    }
+                });
+            };
+
+            // --- Initializer (Modified for API) ---
+            const initializer = {
+                init: async () => { // <-- Make async
+                    console.log("Initializing TaskMaster...");
+                    // 1. Load LOCAL Data (Settings/Stats only)
+                    settings = storageManager.loadSettings();
+                    stats = storageManager.loadStats();
+
+                    // 2. Apply Initial UI (Theme, Username placeholder, etc.)
+                    uiManager.applyTheme(settings.theme);
+                    uiManager.updateUsernameDisplay(); // Shows name from settings initially
+                    uiManager.startQuoteCarousel();
+                    soundManager.updateMuteStates();
+                    // Background sound set later after potential daily reset clears history
+                    timerManager.updateDurationsFromSettings(); // Set initial timer labels
+
+                    // 3. Fetch User and Tasks from Server
+                    taskList.innerHTML = '<li class="loading-message">Loading tasks...</li>'; // Show loading state
+                    noTasksMessage.classList.add('hidden');
+                    try {
+                         const response = await fetch(`${API_ENDPOINT}?action=getUserAndTasks&username=${encodeURIComponent(settings.username)}`);
+                         if (!response.ok) {
+                             // Handle HTTP errors (e.g., 404, 500)
+                             throw new Error(`HTTP error! status: ${response.status}`);
+                         }
+                         const result = await response.json();
+
+                         if (result.success) {
+                             currentUserId = result.userId;
+                             // Ensure tasks have boolean 'completed' and string 'id'
+                             tasks = (result.tasks || []).map(task => ({
+                                 ...task,
+                                 id: String(task.id),
+                                 completed: Boolean(task.completed),
+                                 sort_order: parseInt(task.sort_order ?? 0) // Ensure sort_order is a number
+                             }));
+                             console.log(`User '${settings.username}' loaded/created with ID: ${currentUserId}. Tasks fetched: ${tasks.length}`);
+                         } else {
+                             throw new Error(`API error: ${result.message || 'Unknown error'}`);
+                         }
+                    } catch (error) {
+                         console.error("Failed to load user/tasks:", error);
+                         uiManager.showModal("Error", `Could not load data: ${error.message}. Check connection and username. Starting fresh locally.`);
+                         tasks = []; // Start with empty tasks on error
+                         currentUserId = null; // No user ID if fetch failed
+                         // Keep existing settings/stats from localStorage
+                    }
+
+
+                    // 4. Check Daily Reset (Uses loaded local stats)
+                    statsManager.checkDailyReset(); // May update stats/show summary
+
+                    // 5. Render Initial Content (Tasks from server or empty, Timer)
+                    pomodoroCycleCount = stats.pomodoroHistory.filter(h => h === 'P').length % 4; // Recalculate cycle count today based on loaded stats
+                    uiManager.renderTasks(); // Render based on fetched/empty tasks
+                    uiManager.updateFilterButtons();
+                    timerManager.switchMode(timerState.mode, false); // Set initial timer mode display & time (no sound/message)
+
+                    // 6. Final UI updates & Setup Interactions
+                    uiManager.updateStats(); // Update stats display based on loaded stats & tasks
+                    soundManager.setBackgroundSoundFromSettings(); // Apply bg sound setting
+                    setupEventListeners(); // Setup interactions AFTER initial data load and UI setup
+
+                    // 7. Show stored daily summary if present (and not already shown by checkDailyReset)
+                     // CheckDailyReset now handles showing the summary with a slight delay
+
+                    console.log("TaskMaster Ready!");
+                }
+            };
+
+            // --- Start the App ---
+            initializer.init(); // Call the async function
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>
