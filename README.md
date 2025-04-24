@@ -1,4 +1,4 @@
-# TaskMaster - Focus Hub & Task Manager
+# Salauddin and Surovi's Task Manager
 
 A web-based task management application designed to help users organize tasks and enhance focus using an integrated Pomodoro timer and related techniques. This version leverages PHP and MySQL to persist task data for individual users based on a username setting.
 
