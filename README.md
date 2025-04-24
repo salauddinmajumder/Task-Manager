@@ -2,7 +2,8 @@
 
 A web-based task management application designed to help users organize tasks and enhance focus using an integrated Pomodoro timer and related techniques. This version leverages PHP and MySQL to persist task data for individual users based on a username setting.
 
-![Screenshot Placeholder](placeholder.png)
+![image](https://github.com/user-attachments/assets/59dd1b0e-6216-4888-a25e-6f93921493ab)
+
 *(Suggestion: Replace placeholder.png with an actual screenshot of the application)*
 
 ## Features
