@@ -146,4 +146,4 @@ A web-based task management application designed to help users organize tasks an
 
 ## License
 
-This project is licensed under the MIT License (to be confirmed).
+This project is licensed under the Monozog.com License (to be confirmed).
