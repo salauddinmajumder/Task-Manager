@@ -92,6 +92,10 @@ A web-based task management application designed to help users organize tasks an
      CREATE INDEX idx_user_tasks ON tasks(user_id, completed, sort_order);
      ```
 
+![image](https://github.com/user-attachments/assets/e14bf8d3-e94c-48b3-bf93-470048890fbe)
+
+![image](https://github.com/user-attachments/assets/71d975b9-d7fd-473b-99e3-6cd61315e998)
+
 3. **Configuration:**
    - Locate the `db_config.php` file and open it in a text editor.
    - Update the database credentials:
